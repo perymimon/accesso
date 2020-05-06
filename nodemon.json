@@ -1,0 +1,3 @@
+{
+  "ignore": ["dist/", "cache/", "node_modules/"]
+}
