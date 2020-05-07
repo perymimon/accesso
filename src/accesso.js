@@ -239,7 +239,7 @@ async function oneTap$Token(authSetting, useAuto) {
             oneTap.prompt((notification) => {
                 const n = notification;
                 if (n.isNotDisplayed() || n.isSkippedMoment()) {
-                    rej(n.getNotDisplayedReason() ?? n.getSkippedReason())
+                    rej(nullish(n.getNotDisplayedReason() , n.getSkippedReason()))
                 }
             });
         } catch (e) {
@@ -334,7 +334,7 @@ export function vendorPayload(vendor) {
 
 function setVendorPayload(vendor, payload) {
     if ('error' in payload) throw payload;
-    const exp = (payload.expires_in ?? payload.exp) * 1000;
+    const exp = nullish(payload.expires_in , payload.exp) * 1000;
     const newPayload = {
         ...vendorPayload(vendor),
         ...payload,
@@ -399,7 +399,7 @@ function fireEvent(vendor, eventName, data = {}) {
 function fireError(vendor, e, reThrow) {
     const event = new Event(EventTypesEnum.error);
     const {message, stack} = e;
-    const objErr = e instanceof Error ? e : Error(e?.error ?? e);
+    const objErr = e instanceof Error ? e : Error(nullish(e?.error , e));
     Object.assign(event, {
         ...objErr,
         message: e.message,
@@ -445,16 +445,16 @@ function checkSchema(object, schema) {
 function windowFeatures(setting) {
     let {left, screenX, top, screenY, width, innerWidth, height, innerHeight} = setting;
     const {menubar, toolbar, location, status, resizable, scrollbars} = setting;
-    left = left ?? screenX;
-    top = top ?? screenY;
-    width = width ?? innerWidth;
-    height = height ?? innerHeight;
+    left = nullish(left , screenX);
+    top = nullish(top , screenY);
+    width = nullish(width , innerWidth);
+    height = nullish(height , innerHeight);
 
     const values = joinObject({
-        left: left ?? 100,
-        top: top ?? 100,
-        width: width ?? 200,
-        height: height ?? 200,
+        left: nullish(left , 100),
+        top: nullish(top , 100),
+        width: nullish(width , 200),
+        height: nullish(height , 200),
     }, '=', ',');
 
     const flags = Object.keys({
@@ -476,7 +476,7 @@ function joinObject(object, delKv = '=', delPairs = '&') {
 }
 
 function splitUrl(string, delKv = '=', delPairs = '&') {
-    string = string ?? decodeURIComponent(location.search.slice(1));
+    string = nullish(string , decodeURIComponent(location.search.slice(1)));
     if (!string) return {};
     const entries = string.split(delPairs).map(pairs => pairs.split(delKv));
     return Object.fromEntries(entries);
@@ -586,7 +586,13 @@ function deepAssign(target, ...sources) {
     }
     return target;
 }
-
+function nullish(...values){
+    for(v of values){
+        if(v !== null && v !== void 0)
+            return values
+    }
+    return values.pop();
+}
 
 function catchi(fn, resFn) {
     return function (...args) {

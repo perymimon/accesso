@@ -1,8 +1,8 @@
 {
-  "name": "accses0",
-  "version": "0.1.0",
+  "name": "@perymimon/accesso",
+  "version": "0.3.2",
   "description": "hand craft, carefree, web-client OAuth 2.0 solution",
-  "main": "index.js",
+  "main": "src/providers.js",
   "directories": {
     "test": "test",
     "lib": "src",
@@ -12,7 +12,8 @@
     "test": "nodemon --inspect test/test-server.js",
     "xtest": "node --inspect test/test-server.js",
     "start": "echo \"Error: no test specified\" && exit 1",
-    "stop": "taskkill /f /im node.exe"
+    "stop": "taskkill /f /im node.exe",
+    "publish": "npm publish -access public ."
   },
   "author": "",
   "license": "ISC",

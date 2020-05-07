@@ -1,4 +1,4 @@
-# Access0 (pronounce: accsesso )
+# Access0 (pronounce: accesso )
 hand craft, carefree, web-client OAuth 2.0 solution
 
 
